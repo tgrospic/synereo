@@ -27,6 +27,16 @@ object EvalConfigWrapper extends EvalConfig {
   def readIntOrElse(param: String, default: Int): Int =
     Try(readInt(param)).getOrElse(default)
 
+  def readBoolean(param: String): Boolean =
+    try {
+      evalConfig().getBoolean(param)
+    } catch {
+      case _: Throwable => throw new IllegalStateException(s"Missing or empty value for: $param in eval.conf file.")
+    }
+
+  def readBooleanOrElse(param: String, default: Boolean): Boolean =
+    Try(readBoolean(param)).getOrElse(default)
+
   def readList(param: String): List[String] =
     try {
       evalConfig().getStringList(param).toList

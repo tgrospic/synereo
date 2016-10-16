@@ -127,6 +127,9 @@ object btcKeyMapper extends Serializable {
 }
 
 object ConfirmationEmail extends Serializable {
+  val EMAIL_SMTP_HOST     = EvalConfigWrapper.readString("EmailSmtpHost")
+  val EMAIL_SMTP_PORT     = EvalConfigWrapper.readIntOrElse("EmailSmtpPort", 465)
+  val EMAIL_SSL           = EvalConfigWrapper.readBooleanOrElse("EmailSSL", true)
   val EMAIL_AUTH_USERNAME = EvalConfigWrapper.readString("EmailAuthUsername")
   val EMAIL_AUTH_PASSWORD = EvalConfigWrapper.readString("EmailAuthPassword")
   val EMAIL_FROM_ADDRESS  = EvalConfigWrapper.readString("EmailFromAddress")
@@ -135,10 +138,10 @@ object ConfirmationEmail extends Serializable {
     import org.apache.commons.mail._
 
     val simple = new SimpleEmail()
-    simple.setHostName("smtp.googlemail.com")
-    simple.setSmtpPort(465)
+    simple.setHostName(EMAIL_SMTP_HOST)
+    simple.setSmtpPort(EMAIL_SMTP_PORT)
     simple.setAuthenticator(new DefaultAuthenticator(EMAIL_AUTH_USERNAME, EMAIL_AUTH_PASSWORD))
-    simple.setSSLOnConnect(true)
+    simple.setSSLOnConnect(EMAIL_SSL)
     simple.setFrom(EMAIL_FROM_ADDRESS)
     simple.setSubject("Confirm splicious agent signup")
     // TODO(mike): get the URL from a config file
